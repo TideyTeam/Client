@@ -5,7 +5,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('/Users/ivanwidjanarko/Documents/CalvinKlean/Client/assets/images/Calvin Klean.png')} // Specify the local image path
+        source={require('../../assets/images/Calvin Klean.png')} // Specify the local image path
         style={styles.backgroundImage}
       />
     </View>
