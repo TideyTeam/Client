@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, ImageBackground, View } from 'react-native';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome to Calvin Klean!</Text>
+      <ImageBackground
+        source={require('/Users/ivanwidjanarko/Documents/CalvinKlean/Client/assets/images/Calvin Klean.png')} // Specify the local image path
+        style={styles.backgroundImage}
+      />
     </View>
   );
 }
@@ -11,13 +15,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  welcomeText: {
-    fontSize: 35, // Make the text bigger
-    fontFamily: 'Times New Roman', // Use a different font style (or you can use 'sans-serif', 'monospace', etc.)
-    fontWeight: 'bold', // Optional: Make the text bold
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // Resize the image to cover the entire screen
+    justifyContent: 'center',
   },
 });
