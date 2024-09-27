@@ -43,7 +43,7 @@ function HomeScreen() {
         <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Button 1 pressed')}>
           <View style={styles.buttonContent}>
             <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+              <Text style={styles.buttonHeading}>Laundry Machine 0</Text>
               <Text style={styles.buttonTime}>14:53</Text>
             </View>
             <Image 
