@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
 
   buttonBox: {
-    marginVertical: 30,
+    marginVertical: 30, 
     width: 300,
     height: 100,
     padding: 20,
