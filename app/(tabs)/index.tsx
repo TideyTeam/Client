@@ -7,6 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Button from '../../components/Button';
 
 const LogoImage = require('../../assets/images/Calvin Klean.png');
+const DryerImage = require('../../assets/images/DryerMachine.png');
+const WasherImage = require('../../assets/images/LaundryMachine.png');
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -14,7 +16,18 @@ export default function App() {
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={({ navigation }) => ({
+            title: 'Home', // Set the title
+            headerRight: () => (
+              <TouchableOpacity onPress={() => alert('Button Pressed')}>
+                <Text style={{ marginRight: 10, fontSize: 16 }}>Notification</Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -42,11 +55,17 @@ function HomeScreen() {
         <View style={styles.buttonRow}>
           {/* Washer Button */}
           <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button A pressed')}>
-            <Text style={styles.buttonHeading}>Washer</Text>
+            <Image 
+                source={WasherImage} // Ensure correct path
+                style={styles.icon} 
+              />
           </TouchableOpacity>
           {/* Dryer Button */}
           <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button B pressed')}>
-            <Text style={styles.buttonHeading}>Dryer</Text>
+            <Image 
+                source={DryerImage} // Ensure correct path
+                style={styles.icon} 
+              />
           </TouchableOpacity>
         </View>
 
@@ -125,6 +144,7 @@ const styles = StyleSheet.create({
     width: 440,
     height: 700, 
     borderRadius: 18,
+    marginTop: 100,
   },
   footerContainer: {
     flex: 1 / 3,
