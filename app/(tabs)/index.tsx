@@ -33,6 +33,7 @@ export default function App() {
             ),
           })}
         />
+        <Stack.Screen name="Washer" component={WasherScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -60,17 +61,17 @@ function HomeScreen({navigation}) {
         <View style={styles.buttonRow}>
           {/* Washer Button */}
           <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button A pressed')}>
-            <Image 
-                source={WasherImage} // Ensure correct path
-                style={styles.icon} 
-              />
+          <Image 
+              source={WasherImage} // Ensure correct path
+              style={styles.icon} 
+            />
           </TouchableOpacity>
           {/* Dryer Button */}
           <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button B pressed')}>
-            <Image 
-                source={DryerImage} // Ensure correct path
-                style={styles.icon} 
-              />
+          <Image 
+              source={DryerImage} // Ensure correct path
+              style={styles.icon} 
+            />
           </TouchableOpacity>
         </View>
 
