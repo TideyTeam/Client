@@ -22,6 +22,19 @@ function MainScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
+
+        { /* Adding Washer and Dryer Icon */}
+        <View style={styles.buttonRow}>
+          {/* Washer Button */}
+          <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button A pressed')}>
+            <Text style={styles.buttonHeading}>Washer</Text>
+          </TouchableOpacity>
+          {/* Dryer Button */}
+          <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button B pressed')}>
+            <Text style={styles.buttonHeading}>Dryer</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Button 1 */}
         <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Button 1 pressed')}>
           <View style={styles.buttonContent}>
@@ -141,11 +154,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 80,
   },
 
   buttonBox: {
-    marginVertical: 30, 
+    marginVertical: 15,  // reduce the space between the buttons 
     width: 300,
     height: 100,
     padding: 20,
@@ -196,4 +209,34 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: 'contain', // Ensure the image fits within the dimensions
   },
+
+  // Button for washer and dryer icons 
+  smallButton: {
+    width: 130,  // Small width for side-by-side buttons
+    height: 130,
+    backgroundColor: '#3D3D56',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginRight: 10, // adding space on the side 
+    marginLeft: 10,
+    shadowColor: '#000', // Shadow color
+    shadowOffset: {
+      width: 0, // Horizontal offset
+      height: 5, // Vertical offset
+    },
+    shadowOpacity: 0.5, // Shadow opacity
+    shadowRadius: 8, // Shadow blur radius
+    // Elevation for Android
+    elevation: 10, // Elevation for Android shadows
+  },
+
+  buttonRow: {
+    flexDirection: 'row', // Align buttons in a row
+    justifyContent: 'space-between', // Space between buttons
+    width: '80%', // Adjust the width of the container to fit both buttons
+    marginBottom: 20, // Add space between this row and the buttons below
+  },
+
+
 });
