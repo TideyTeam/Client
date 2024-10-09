@@ -1,5 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet, Image, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import Button from '../../components/Button';
@@ -19,6 +21,19 @@ export default function App() {
 }
 
 function MainScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Image source={LogoImage} style={styles.image} />
+      </View>
+      <View style={styles.footerContainer}>
+        <Button label="Get Started" onPress={() => navigation.navigate('Home')} />
+      </View>
+    </View>
+  );
+}
+
+function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -90,71 +105,31 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 200,
+    marginTop: 100,
   },
 
-  buttonBox: {
-    marginVertical: 30,
-    width: 300,
-    height: 100,
-    padding: 20,
-    backgroundColor: '#3D3D56',
-    borderRadius: 20,
-    justifyContent: 'center',
-    shadowColor: '#000', // Shadow color
-  shadowOffset: {
-    width: 0, // Horizontal offset
-    height: 5, // Vertical offset
-  },
-  shadowOpacity: 0.5, // Shadow opacity
-  shadowRadius: 8, // Shadow blur radius
-  // Elevation for Android
-  elevation: 10, // Elevation for Android shadows
-},
-
-  buttonContent: {
-    flexDirection: 'row', // Keep as row for layout
-    justifyContent: 'space-between', // Space out the content
-    alignItems: 'center', // Center contents vertically
-    width: '100%',
-  },
-
-  textContainer: {
-    flexDirection: 'column', // Stack text vertically
-    justifyContent: 'center', // Center the text vertically
-    flex: 1, // Take remaining space
-  },
-
-  buttonHeading: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'left',
-    width: '100%',
-  },
-
-  buttonTime: {
-    color: '#FFCE00',
-    fontSize: 20,
-    fontWeight: 100,
-    marginTop: 15, // Space between heading and time
-  },
-
-  icon: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain', // Ensure the image fits within the dimensions
-  },
   homeContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  buttonContainer: {
-    justifyContent: 'center',
+  imageContainer: {
+    flex: 2 / 3,
+    resizeMode: 'cover',
     alignItems: 'center',
-    marginTop: 80,
+    justifyContent: 'center',
+  },
+
+  image: {
+    width: 440,
+    height: 700, 
+    borderRadius: 18,
+  },
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   buttonBox: {
