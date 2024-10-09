@@ -19,7 +19,6 @@ export default function App() {
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
-        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Washer" component={WasherScreen} />
         <Stack.Screen
           name="Home"
