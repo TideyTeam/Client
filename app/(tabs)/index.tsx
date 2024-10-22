@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -51,6 +51,21 @@ function MainScreen({ navigation }) {
 }
 
 function HomeScreen({navigation}) {
+  const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
+  const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
+
+  const handleWasherPress = () => {
+    setWasherPressed(true);    // Set Washer as pressed
+    setDryerPressed(false);    // Unpress the Dryer
+    alert('Washer Button Pressed');
+  };
+
+  const handleDryerPress = () => {
+    setDryerPressed(true);     // Set Dryer as pressed
+    setWasherPressed(false);   // Unpress the Washer
+    alert('Dryer Button Pressed');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -58,14 +73,14 @@ function HomeScreen({navigation}) {
         { /* Adding Washer and Dryer Icon */}
         <View style={styles.buttonRow}>
           {/* Washer Button */}
-          <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button A pressed')}>
+          <TouchableOpacity style={[styles.smallButton, isDryerPressed && styles.grayLayer]} onPress={handleWasherPress}>
             <Image 
                 source={WasherImage} // Ensure correct path
                 style={styles.icon} 
               />
           </TouchableOpacity>
           {/* Dryer Button */}
-          <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button B pressed')}>
+          <TouchableOpacity style={[styles.smallButton, isWasherPressed && styles.grayLayer]} onPress={handleDryerPress}>
             <Image 
                 source={DryerImage} // Ensure correct path
                 style={styles.icon} 
@@ -78,7 +93,7 @@ function HomeScreen({navigation}) {
           <View style={styles.buttonContent}>
             <View style={styles.textContainer}>
               <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
-              <Text style={styles.buttonTime}>14:53</Text>
+              
             </View>
             <Image 
               source={LaundryIcon} // Ensure correct path
@@ -92,7 +107,7 @@ function HomeScreen({navigation}) {
           <View style={styles.buttonContent}>
             <View style={styles.textContainer}>
               <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
-              <Text style={styles.buttonTime}>15:00</Text>
+              
             </View>
             <Image 
               source={LaundryIcon} // Ensure correct path
@@ -106,7 +121,7 @@ function HomeScreen({navigation}) {
           <View style={styles.buttonContent}>
             <View style={styles.textContainer}>
               <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
-              <Text style={styles.buttonTime}>15:30</Text>
+
             </View>
             <Image 
               source={LaundryIcon} // Ensure correct path
@@ -126,7 +141,7 @@ function WasherScreen(){
         <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set!')}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
-              <Text style={styles.NotificationHeading}>Get Notified</Text>
+              <Text style={styles.NotificationHeading}>Laundry Machine 1 </Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -145,7 +160,7 @@ function WasherScreen(){
         <TouchableOpacity style={styles.notificationBox} onPress={() => alert('14 minutes and 53 seconds left!')}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
-              <Text style={styles.NotificationHeading}>Time Left: 14:53</Text>
+              <Text style={styles.NotificationHeading}>Get Notified</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -260,6 +275,11 @@ const styles = StyleSheet.create({
       shadowRadius: 8, // Shadow blur radius
       // Elevation for Android
       elevation: 10, // Elevation for Android shadows
+    },
+
+    grayLayer: {
+      backgroundColor: 'gray', // Apply gray background to simulate a gray layer
+      opacity: 0.5, // Add some transparency
     },
 
     buttonRow: {
