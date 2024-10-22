@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -51,6 +51,8 @@ function MainScreen({ navigation }) {
 }
 
 function HomeScreen({navigation}) {
+  // add state
+  const [isWasher, setIsWasher] = useState(true);
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -58,14 +60,14 @@ function HomeScreen({navigation}) {
         { /* Adding Washer and Dryer Icon */}
         <View style={styles.buttonRow}>
           {/* Washer Button */}
-          <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button A pressed')}>
+          <TouchableOpacity style={styles.smallButton} onPress={() => setIsWasher(true)}>
             <Image 
                 source={WasherImage} // Ensure correct path
                 style={styles.icon} 
               />
           </TouchableOpacity>
           {/* Dryer Button */}
-          <TouchableOpacity style={styles.smallButton} onPress={() => alert('Button B pressed')}>
+          <TouchableOpacity style={styles.smallButton} onPress={() => setIsWasher(false)}>
             <Image 
                 source={DryerImage} // Ensure correct path
                 style={styles.icon} 
@@ -73,51 +75,49 @@ function HomeScreen({navigation}) {
           </TouchableOpacity>
         </View>
 
-        {/* Button 1 */}
-        <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
-          <View style={styles.buttonContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
-              <Text style={styles.buttonTime}>14:53</Text>
-            </View>
-            <Image 
-              source={LaundryIcon} // Ensure correct path
-              style={styles.icon} 
-            />
-          </View>
-        </TouchableOpacity>
+        
+        {isWasher ? (
+          <>
+            {/* Washer Buttons */}
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+                  <Text style={styles.buttonTime}>14:53</Text>
+                </View>
+                <Image source={LaundryIcon} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
 
-        {/* Button 2 */}
-        <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Button 2 pressed')}>
-          <View style={styles.buttonContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
-              <Text style={styles.buttonTime}>15:00</Text>
-            </View>
-            <Image 
-              source={LaundryIcon} // Ensure correct path
-              style={styles.icon} 
-            />
-          </View>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Washer 2 pressed')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
+                  <Text style={styles.buttonTime}>15:00</Text>
+                </View>
+                <Image source={LaundryIcon} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
 
-        {/* Button 3 */}
-        <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Button 3 pressed')}>
-          <View style={styles.buttonContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
-              <Text style={styles.buttonTime}>15:30</Text>
-            </View>
-            <Image 
-              source={LaundryIcon} // Ensure correct path
-              style={styles.icon} 
-            />
-          </View>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Washer 3 pressed')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
+                  <Text style={styles.buttonTime}>15:30</Text>
+                </View>
+                <Image source={LaundryIcon} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+          </>
+        ) : (
+          /* No buttons for dryers yet */
+          <Text style={styles.noDryersText}>Dryer machines are not available yet.</Text>
+        )}
       </View>
     </View>
   );
 }
+
 function WasherScreen(){
   return (
     <View style={styles.washerContainer}>
@@ -331,5 +331,11 @@ washerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  noDryerText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: '#FFCE00',
+  }
 
 });
