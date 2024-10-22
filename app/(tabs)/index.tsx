@@ -51,19 +51,21 @@ function MainScreen({ navigation }) {
 }
 
 function HomeScreen({navigation}) {
+  // add state
+  const [isWasher, setIsWasher] = useState(true);
   const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
   const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
 
   const handleWasherPress = () => {
     setWasherPressed(true);    // Set Washer as pressed
     setDryerPressed(false);    // Unpress the Dryer
-    alert('Washer Button Pressed');
+    setIsWasher(true);
   };
 
   const handleDryerPress = () => {
     setDryerPressed(true);     // Set Dryer as pressed
     setWasherPressed(false);   // Unpress the Washer
-    alert('Dryer Button Pressed');
+    setIsWasher(false);
   };
 
   return (
@@ -88,51 +90,46 @@ function HomeScreen({navigation}) {
           </TouchableOpacity>
         </View>
 
-        {/* Button 1 */}
-        <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
-          <View style={styles.buttonContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
-              
-            </View>
-            <Image 
-              source={LaundryIcon} // Ensure correct path
-              style={styles.icon} 
-            />
-          </View>
-        </TouchableOpacity>
+        
+        {isWasher ? (
+          <>
+            {/* Washer Buttons */}
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+                </View>
+                <Image source={LaundryIcon} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
 
-        {/* Button 2 */}
-        <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Button 2 pressed')}>
-          <View style={styles.buttonContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
-              
-            </View>
-            <Image 
-              source={LaundryIcon} // Ensure correct path
-              style={styles.icon} 
-            />
-          </View>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Washer 2 pressed')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
+                </View>
+                <Image source={LaundryIcon} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
 
-        {/* Button 3 */}
-        <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Button 3 pressed')}>
-          <View style={styles.buttonContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
-
-            </View>
-            <Image 
-              source={LaundryIcon} // Ensure correct path
-              style={styles.icon} 
-            />
-          </View>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Washer 3 pressed')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
+                </View>
+                <Image source={LaundryIcon} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+          </>
+        ) : (
+          /* No buttons for dryers yet */
+          <Text style={styles.noDryersText}>Dryer machines are not available yet.</Text>
+        )}
       </View>
     </View>
   );
 }
+
 function WasherScreen(){
   return (
     <View style={styles.washerContainer}>
@@ -351,5 +348,11 @@ washerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  noDryersText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: '#FFCE00',
+  }
 
 });
