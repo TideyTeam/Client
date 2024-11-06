@@ -11,6 +11,7 @@ const LaundryIcon = require('../../assets/images/LaundryIcon.png');
 const DryerImage = require('../../assets/images/DryerMachine.png');
 const WasherImage = require('../../assets/images/LaundryMachine.png');
 const WasherMainImage = require('../../assets/images/WasherScreen.png');
+const NotificationImage = require('../../assets/images/NotificationIcon.png');
 
 
 const Stack = createNativeStackNavigator();
@@ -28,7 +29,10 @@ export default function App() {
             title: 'Home', // Set the title
             headerRight: () => (
               <TouchableOpacity onPress={() => alert('Button Pressed')}>
-                <Text style={{ marginRight: 10, fontSize: 16 }}>Notification</Text>
+                <Image 
+                 style={styles.notif} 
+                source={NotificationImage} // Ensure correct path
+              />
               </TouchableOpacity>
             ),
           })}
@@ -317,6 +321,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'contain', // Ensure the image fits within the dimensions
+  },
+
+  notif: {
+    width: 50,
+    height: 50,
+    marginRight: 20,
   },
 
   // Washer Dryer Icon Within HomeScreen
