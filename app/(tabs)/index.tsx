@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 
 import Button from '../../components/Button';
@@ -60,6 +61,7 @@ function MainScreen({ navigation }) {
 function HomeScreen({navigation}) {
   // add state
   const [isWasher, setIsWasher] = useState(true);
+  
   const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
   const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
 
@@ -166,11 +168,12 @@ function HomeScreen({navigation}) {
 }
 
 function WasherScreen(){
+  const navigation = useNavigation();
   return (
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set!')}>
+        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set')}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Laundry Machine 1 </Text>
@@ -189,7 +192,7 @@ function WasherScreen(){
 
        {/* Time Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('14 minutes and 53 seconds left!')}>
+        <TouchableOpacity style={styles.notificationBox}onPress={() => navigation.navigate('Notification', { showLaundryButton: true })}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Get Notified</Text>
@@ -238,7 +241,17 @@ function DryerScreen(){
     </View>
   );
 }
-function NotificationScreen({ navigation }) {
+const NotificationScreen = ({ route }) => {
+  const [showLaundryButton, setShowLaundryButton] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.showLaundryButton !== undefined) {
+      setShowLaundryButton(route.params.showLaundryButton);
+    }
+  }, [route.params]);
+
+
+
   return (
     <View style={styles.notificationContainer}>
       <View style={styles.notificationContent}>
@@ -247,7 +260,20 @@ function NotificationScreen({ navigation }) {
           style={styles.notifIcon} 
         />
         <Text style={styles.notificationText}>Notifications</Text>
+
       </View>
+      {showLaundryButton && (
+        <TouchableOpacity 
+          style={styles.buttonBox} 
+          onPress={() => alert('Laundry Machine 1 selected')}>
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+            </View>
+            <Image source={LaundryIcon} style={styles.icon} />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
