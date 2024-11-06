@@ -12,6 +12,7 @@ const DryerImage = require('../../assets/images/DryerMachine.png');
 const WasherImage = require('../../assets/images/LaundryMachine.png');
 const WasherMainImage = require('../../assets/images/WasherScreen.png');
 const NotificationImage = require('../../assets/images/NotificationIcon.png');
+const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 
 
 const Stack = createNativeStackNavigator();
@@ -22,13 +23,14 @@ export default function App() {
         <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
         <Stack.Screen name="Washer" component={WasherScreen} />
         <Stack.Screen name="Dryer" component={DryerScreen} />
+        <Stack.Screen name="Notification" component={NotificationScreen}/>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={({ navigation }) => ({
             title: 'Home', // Set the title
             headerRight: () => (
-              <TouchableOpacity onPress={() => alert('Button Pressed')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
                 <Image 
                  style={styles.notif} 
                 source={NotificationImage} // Ensure correct path
@@ -236,6 +238,19 @@ function DryerScreen(){
     </View>
   );
 }
+function NotificationScreen({ navigation }) {
+  return (
+    <View style={styles.notificationContainer}>
+      <View style={styles.notificationContent}>
+        <Image 
+          source={NotificationGoldImage} // Ensure the correct path to your image
+          style={styles.notifIcon} 
+        />
+        <Text style={styles.notificationText}>Notifications</Text>
+      </View>
+    </View>
+  );
+}
 
 /* Main Screen */
 const styles = StyleSheet.create({
@@ -429,6 +444,31 @@ washerContainer: {
     marginTop: 20,
     fontSize: 18,
     color: '#FFCE00',
-  }
+  },
+
+/* Notification Screen */
+
+notificationContainer: {
+  flex: 1,
+  backgroundColor: '#3D3D56',
+  alignItems: 'center', // Centers horizontally
+  justifyContent: 'center', // Centers vertically
+},
+notificationContent: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  position: 'absolute', // Fixes content to the top
+  top: 20, // Adjusts how close to the top it should appear
+},
+notificationText: {
+  fontSize: 30,
+  fontWeight: 'bold',
+  color: '#FFFF',
+},
+notifIcon: {
+  width: 60,
+  height: 60,
+  marginRight: 20,
+}
 
 });
