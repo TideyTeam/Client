@@ -20,6 +20,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
         <Stack.Screen name="Washer" component={WasherScreen} />
+        <Stack.Screen name="Dryer" component={DryerScreen} />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -103,7 +104,7 @@ function HomeScreen({navigation}) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Washer 2 pressed')}>
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
@@ -112,7 +113,7 @@ function HomeScreen({navigation}) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => alert('Washer 3 pressed')}>
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
@@ -123,7 +124,35 @@ function HomeScreen({navigation}) {
           </>
         ) : (
           /* No buttons for dryers yet */
-          <Text style={styles.noDryersText}>Dryer machines are not available yet.</Text>
+          <>
+            {/* Dryer Buttons */}
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Dryer Machine 1</Text>
+                </View>
+                <Image source={DryerImage} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Dryer Machine 2</Text>
+                </View>
+                <Image source={DryerImage} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
+              <View style={styles.buttonContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonHeading}>Dryer Machine 3</Text>
+                </View>
+                <Image source={DryerImage} style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </View>
@@ -139,6 +168,43 @@ function WasherScreen(){
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Laundry Machine 1 </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+       {/* Washer Image */}
+      <View style={styles.imageWrapper}>
+        <Image 
+          source={WasherMainImage} // Ensure correct path to WasherMainImage
+          style={styles.washerMainImage} 
+        />
+      </View>
+
+       {/* Time Button */}
+      <View style={styles.washerWrapper}>
+        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('14 minutes and 53 seconds left!')}>
+          <View style={styles.NotificationContent}>
+            <View style={styles.NotificationContainer}>
+              <Text style={styles.NotificationHeading}>Get Notified</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+      
+    </View>
+  );
+}
+
+function DryerScreen(){
+  return (
+    <View style={styles.washerContainer}>
+      {/* Get Notified Button */}
+      <View style={styles.washerWrapper}>
+        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set!')}>
+          <View style={styles.NotificationContent}>
+            <View style={styles.NotificationContainer}>
+              <Text style={styles.NotificationHeading}>Dryer Machine 1 </Text>
             </View>
           </View>
         </TouchableOpacity>
