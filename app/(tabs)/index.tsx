@@ -197,7 +197,7 @@ function HomeScreen({navigation}) {
 }
 
 function WasherScreen({navigation}){
-  const { setShowLaundryButton } = useNotification();
+  const { setShowLaundryButton} = useNotification();
 
   return (
     <View style={styles.washerContainer}>
