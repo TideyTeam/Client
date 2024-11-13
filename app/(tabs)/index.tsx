@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,34 +14,60 @@ const WasherImage = require('../../assets/images/LaundryMachine.png');
 const WasherMainImage = require('../../assets/images/WasherScreen.png');
 const NotificationImage = require('../../assets/images/NotificationIcon.png');
 const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
+type NotificationContextType = {
+  showLaundryButton: boolean;
+  setShowLaundryButton: (value: boolean) => void;
+};
 
 const Stack = createNativeStackNavigator();
+
+export const NotificationProvider = ({ children }: { children: ReactNode }) => {
+  const [showLaundryButton, setShowLaundryButton] = useState(false);
+
+  return (
+    <NotificationContext.Provider value={{ showLaundryButton, setShowLaundryButton }}>
+      {children}
+    </NotificationContext.Provider>
+  );
+};
+
+export const useNotification = () => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error('useNotification must be used within a NotificationProvider');
+  }
+  return context;
+};
+
 export default function App() {
   return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
-        <Stack.Screen name="Washer" component={WasherScreen} />
-        <Stack.Screen name="Dryer" component={DryerScreen} />
-        <Stack.Screen name="Notification" component={NotificationScreen}/>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={({ navigation }) => ({
-            title: 'Home', // Set the title
-            headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                <Image 
-                 style={styles.notif} 
-                source={NotificationImage} // Ensure correct path
-              />
-              </TouchableOpacity>
-            ),
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <NotificationProvider>
+      <NavigationContainer independent={true}>
+        <Stack.Navigator initialRouteName="Main">
+          <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
+          <Stack.Screen name="Washer" component={WasherScreen} />
+          <Stack.Screen name="Dryer" component={DryerScreen} />
+          <Stack.Screen name="Notification" component={NotificationScreen}/>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={({ navigation }) => ({
+              title: 'Home', // Set the title
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+                  <Image 
+                  style={styles.notif} 
+                  source={NotificationImage} // Ensure correct path
+                />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NotificationProvider>
   );
 }
 
@@ -167,8 +193,9 @@ function HomeScreen({navigation}) {
   );
 }
 
-function WasherScreen(){
-  const navigation = useNavigation();
+function WasherScreen({navigation}){
+  const { setShowLaundryButton } = useNotification();
+
   return (
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
@@ -192,7 +219,7 @@ function WasherScreen(){
 
        {/* Time Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox}onPress={() => navigation.navigate('Notification', { showLaundryButton: true })}>
+        <TouchableOpacity style={styles.notificationBox}onPress={() => {setShowLaundryButton(true); navigation.navigate('Notification');}}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Get Notified</Text>
@@ -241,16 +268,10 @@ function DryerScreen(){
     </View>
   );
 }
-const NotificationScreen = ({ route }) => {
-  const [showLaundryButton, setShowLaundryButton] = useState(false);
-
-  useEffect(() => {
-    if (route.params?.showLaundryButton !== undefined) {
-      setShowLaundryButton(route.params.showLaundryButton);
-    }
-  }, [route.params]);
 
 
+function NotificationScreen() {
+  const { showLaundryButton } = useNotification();
 
   return (
     <View style={styles.notificationContainer}>
@@ -260,7 +281,7 @@ const NotificationScreen = ({ route }) => {
           style={styles.notifIcon} 
         />
         <Text style={styles.notificationText}>Notifications</Text>
-
+ 
       </View>
       {showLaundryButton && (
         <TouchableOpacity 
@@ -277,6 +298,8 @@ const NotificationScreen = ({ route }) => {
     </View>
   );
 }
+
+
 
 /* Main Screen */
 const styles = StyleSheet.create({
