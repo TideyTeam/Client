@@ -197,7 +197,7 @@ function HomeScreen({navigation}) {
 }
 
 function WasherScreen({navigation}){
-  const { setShowLaundryButton } = useNotification();
+  const { setShowLaundryButton} = useNotification();
 
   return (
     <View style={styles.washerContainer}>
@@ -272,9 +272,8 @@ function DryerScreen(){
   );
 }
 
-
 function NotificationScreen() {
-  const { showLaundryButton } = useNotification();
+  const { showLaundryButton, setShowLaundryButton } = useNotification();
 
   return (
     <View style={styles.notificationContainer}>
@@ -287,16 +286,18 @@ function NotificationScreen() {
  
       </View>
       {showLaundryButton && (
-        <TouchableOpacity 
-          style={styles.buttonBox} 
-          onPress={() => alert('Laundry Machine 1 selected')}>
+        <View style={styles.buttonBox}>
           <View style={styles.buttonContent}>
             <View style={styles.textContainer}>
               <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => setShowLaundryButton(false)}>
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </TouchableOpacity>
             </View>
             <Image source={LaundryIcon} style={styles.icon} />
           </View>
-        </TouchableOpacity>
+  
+        </View>
       )}
     </View>
   );
@@ -539,6 +540,23 @@ notifIcon: {
   width: 60,
   height: 60,
   marginRight: 20,
-}
+},
+
+/* Delete Button */
+
+deleteButton: {
+  backgroundColor: '#FF6B6B',
+  padding: 10,
+  borderRadius: 10,
+  width: '50%',
+  alignItems: 'center',
+  marginTop: 15,
+},
+
+deleteButtonText: {
+  color: '#FFF',
+  fontSize: 12,
+  fontWeight: 'bold',
+},
 
 });
