@@ -133,6 +133,7 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+                  <Text style={styles.buttonAvailable}>Available</Text>
                 </View>
                 <Image source={LaundryIcon} style={styles.icon} />
               </View>
@@ -142,6 +143,7 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
+                  <Text style={styles.buttonAvailable}>Available</Text>
                 </View>
                 <Image source={LaundryIcon} style={styles.icon} />
               </View>
@@ -151,6 +153,7 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
+                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
                 </View>
                 <Image source={LaundryIcon} style={styles.icon} />
               </View>
@@ -373,6 +376,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'left',
     width: '100%',
+  },
+
+  buttonAvailable: {
+    color: '#39FF14',
+    fontSize: 16, 
+    fontWeight: 'bold',
+    textAlign: 'left',
+    width: '100%',
+    paddingTop: 10, 
+  },
+
+  buttonUnavailable: {
+    color: '#Ff0000',
+    fontSize: 16, 
+    fontWeight: 'bold',
+    textAlign: 'left',
+    width: '100%',
+    paddingTop: 10, 
   },
 
   buttonTime: {
