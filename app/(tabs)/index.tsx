@@ -9,16 +9,14 @@ import PropTypes from 'prop-types';
 
 import Button from '../../components/Button';
 
-import LogoImage from '../../assets/images/Calvin Klean.png';
-import LaundryIcon from '../../assets/images/LaundryIcon.png';
-import DryerImage from '../../assets/images/DryerMachine.png';
-import WasherImage from '../../assets/images/LaundryMachine.png';
-import WasherMainImage from '../../assets/images/WasherScreen.png';
-import NotificationImage from '../../assets/images/NotificationIcon.png';
-import NotificationGoldImage from '../../assets/images/NotificationGoldIcon.png';
-import { NotificationContextType } from '/Users/ivanwidjanarko/Documents/CalvinKleanClient/Client/app/(tabs)/types.ts';
-
-
+const LogoImage = require('../../assets/images/Calvin Klean.png');
+const LaundryIcon = require('../../assets/images/LaundryIcon.png');
+const DryerImage = require('../../assets/images/DryerMachine.png');
+const WasherImage = require('../../assets/images/LaundryMachine.png');
+const WasherMainImage = require('../../assets/images/WasherScreen.png');
+const DryerMainImage = require('../../assets/images/DryerScreen.png');
+const NotificationImage = require('../../assets/images/NotificationIcon.png');
+const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 
@@ -284,7 +282,7 @@ function DryerScreen(){
        {/* Washer Image */}
       <View style={styles.imageWrapper}>
         <Image 
-          source={WasherMainImage} // Ensure correct path to WasherMainImage
+          source={DryerMainImage} // Ensure correct path to WasherMainImage
           style={styles.washerMainImage} 
         />
       </View>
@@ -553,7 +551,7 @@ washerContainer: {
 
 notificationContainer: {
   flex: 1,
-  backgroundColor: '#3D3D56',
+  backgroundColor: '#FFFF',
   alignItems: 'center', // Centers horizontally
   justifyContent: 'center', // Centers vertically
 },
@@ -566,7 +564,7 @@ notificationContent: {
 notificationText: {
   fontSize: 30,
   fontWeight: 'bold',
-  color: '#FFFF',
+  color: '#3D3D56',
 },
 notifIcon: {
   width: 60,
@@ -591,4 +589,10 @@ deleteButtonText: {
   fontWeight: 'bold',
 },
 
+<<<<<<< HEAD
 });
+
+
+=======
+});
+>>>>>>> fbacba247c505be8f832df56e9e5bc080e59211e
