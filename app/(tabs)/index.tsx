@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +12,7 @@ const LaundryIcon = require('../../assets/images/LaundryIcon.png');
 const DryerImage = require('../../assets/images/DryerMachine.png');
 const WasherImage = require('../../assets/images/LaundryMachine.png');
 const WasherMainImage = require('../../assets/images/WasherScreen.png');
+const DryerMainImage = require('../../assets/images/DryerScreen.png');
 const NotificationImage = require('../../assets/images/NotificationIcon.png');
 const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -44,7 +45,7 @@ export const useNotification = () => {
 export default function App() {
   return (
     <NotificationProvider>
-      <NavigationContainer independent={true}>
+      <NavigationIndependentTree>
         <Stack.Navigator initialRouteName="Main">
           <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
           <Stack.Screen name="Washer" component={WasherScreen} />
@@ -66,7 +67,7 @@ export default function App() {
             })}
           />
         </Stack.Navigator>
-      </NavigationContainer>
+      </NavigationIndependentTree>
     </NotificationProvider>
   );
 }
@@ -252,7 +253,7 @@ function DryerScreen(){
        {/* Washer Image */}
       <View style={styles.imageWrapper}>
         <Image 
-          source={WasherMainImage} // Ensure correct path to WasherMainImage
+          source={DryerMainImage} // Ensure correct path to WasherMainImage
           style={styles.washerMainImage} 
         />
       </View>
@@ -521,7 +522,7 @@ washerContainer: {
 
 notificationContainer: {
   flex: 1,
-  backgroundColor: '#3D3D56',
+  backgroundColor: '#FFFF',
   alignItems: 'center', // Centers horizontally
   justifyContent: 'center', // Centers vertically
 },
@@ -534,7 +535,7 @@ notificationContent: {
 notificationText: {
   fontSize: 30,
   fontWeight: 'bold',
-  color: '#FFFF',
+  color: '#3D3D56',
 },
 notifIcon: {
   width: 60,
@@ -560,3 +561,5 @@ deleteButtonText: {
 },
 
 });
+
+
