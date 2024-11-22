@@ -589,10 +589,6 @@ deleteButtonText: {
   fontWeight: 'bold',
 },
 
-<<<<<<< HEAD
 });
 
 
-=======
-});
->>>>>>> fbacba247c505be8f832df56e9e5bc080e59211e
