@@ -1,17 +1,29 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
-    "paths": {
+    "target": "ES5",
+      "lib": ["dom", "es2015"],
+      "allowJs": true,
+      "jsx": "react-jsx",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "paths": {
       "@/*": [
         "./*"
       ]
     }
   },
+  
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ]
+  
 }
+
