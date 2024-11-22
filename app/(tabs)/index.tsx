@@ -1,20 +1,36 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import PropTypes from 'prop-types';
+
+// import { useNavigation } from '@react-navigation/native';
 
 
 import Button from '../../components/Button';
 
-const LogoImage = require('../../assets/images/Calvin Klean.png');
-const LaundryIcon = require('../../assets/images/LaundryIcon.png');
-const DryerImage = require('../../assets/images/DryerMachine.png');
-const WasherImage = require('../../assets/images/LaundryMachine.png');
-const WasherMainImage = require('../../assets/images/WasherScreen.png');
-const NotificationImage = require('../../assets/images/NotificationIcon.png');
-const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
+import LogoImage from '../../assets/images/Calvin Klean.png';
+import LaundryIcon from '../../assets/images/LaundryIcon.png';
+import DryerImage from '../../assets/images/DryerMachine.png';
+import WasherImage from '../../assets/images/LaundryMachine.png';
+import WasherMainImage from '../../assets/images/WasherScreen.png';
+import NotificationImage from '../../assets/images/NotificationIcon.png';
+import NotificationGoldImage from '../../assets/images/NotificationGoldIcon.png';
+import { NotificationContextType } from '/Users/ivanwidjanarko/Documents/CalvinKleanClient/Client/app/(tabs)/types.ts';
+
+
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+
+
+//const LogoImage = require('../../assets/images/Calvin Klean.png');
+// const LaundryIcon = require('../../assets/images/LaundryIcon.png');
+// const DryerImage = require('../../assets/images/DryerMachine.png');
+// const WasherImage = require('../../assets/images/LaundryMachine.png');
+// const WasherMainImage = require('../../assets/images/WasherScreen.png');
+// const NotificationImage = require('../../assets/images/NotificationIcon.png');
+// const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
+// const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+
 
 type NotificationContextType = {
   showLaundryButton: boolean;
@@ -44,32 +60,35 @@ export const useNotification = () => {
 export default function App() {
   return (
     <NotificationProvider>
-      <NavigationContainer independent={true}>
+      {/* Make sure there's only ONE NavigationContainer at the root */}
+      <NavigationIndependentTree>
         <Stack.Navigator initialRouteName="Main">
-          <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
+          <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Washer" component={WasherScreen} />
           <Stack.Screen name="Dryer" component={DryerScreen} />
-          <Stack.Screen name="Notification" component={NotificationScreen}/>
+          <Stack.Screen name="Notification" component={NotificationScreen} />
           <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={({ navigation }) => ({
-              title: 'Home', // Set the title
+              title: 'Home',
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
                   <Image 
-                  style={styles.notif} 
-                  source={NotificationImage} // Ensure correct path
-                />
+                    style={styles.notif} 
+                    source={NotificationImage} 
+                  />
                 </TouchableOpacity>
               ),
             })}
           />
         </Stack.Navigator>
-      </NavigationContainer>
+      </NavigationIndependentTree>
     </NotificationProvider>
   );
 }
+
+
 
 function MainScreen({ navigation }) {
   return (
@@ -83,6 +102,10 @@ function MainScreen({ navigation }) {
     </View>
   );
 }
+// PropTypes for MainScreen
+MainScreen.propTypes = {
+  navigation: PropTypes.object.isRequired, // React Navigation's navigation object
+};
 
 function HomeScreen({navigation}) {
   // add state
@@ -196,6 +219,11 @@ function HomeScreen({navigation}) {
   );
 }
 
+  // PropTypes for HomeScreen
+  HomeScreen.propTypes = {
+    navigation: PropTypes.object.isRequired,
+  };
+
 function WasherScreen({navigation}){
   const { setShowLaundryButton} = useNotification();
 
@@ -234,6 +262,10 @@ function WasherScreen({navigation}){
     </View>
   );
 }
+  // PropTypes for WasherScreen
+  WasherScreen.propTypes = {
+    navigation: PropTypes.object.isRequired,
+  };
 
 function DryerScreen(){
   return (
