@@ -232,7 +232,7 @@ function WasherScreen({navigation}){
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set')}>
+        <TouchableOpacity style={styles.notificationBox}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Laundry Machine 1 </Text>
@@ -251,7 +251,7 @@ function WasherScreen({navigation}){
 
        {/* Time Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox}onPress={() => {setShowLaundryButton(true); navigation.navigate('Notification');}}>
+        <TouchableOpacity style={styles.notificationBox}onPress={() => {setShowLaundryButton(true); alert('Your notification has been set');}}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Get Notified</Text>
