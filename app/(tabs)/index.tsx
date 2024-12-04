@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView} from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,7 +19,6 @@ const NotificationImage = require('../../assets/images/NotificationIcon.png');
 const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-
 //const LogoImage = require('../../assets/images/Calvin Klean.png');
 // const LaundryIcon = require('../../assets/images/LaundryIcon.png');
 // const DryerImage = require('../../assets/images/DryerMachine.png');
@@ -29,19 +28,21 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 // const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 // const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-
 type NotificationContextType = {
   showLaundryButton: boolean;
   setShowLaundryButton: (value: boolean) => void;
+  showDryingButton: boolean;
+  setShowDryingButton: (value: boolean) => void;
 };
 
 const Stack = createNativeStackNavigator();
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [showLaundryButton, setShowLaundryButton] = useState(false);
+  const [showDryingButton, setShowDryingButton] = useState(false);
 
   return (
-    <NotificationContext.Provider value={{ showLaundryButton, setShowLaundryButton }}>
+    <NotificationContext.Provider value={{ showLaundryButton, setShowLaundryButton, showDryingButton, setShowDryingButton }}>
       {children}
     </NotificationContext.Provider>
   );
@@ -56,6 +57,8 @@ export const useNotification = () => {
 };
 
 export default function App() {
+  const [notificationCount, setNotificationCount] = useState(2);
+  
   return (
     <NotificationProvider>
       {/* Make sure there's only ONE NavigationContainer at the root */}
@@ -73,10 +76,14 @@ export default function App() {
               title: 'Home',
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                  <Image 
-                    style={styles.notif} 
-                    source={NotificationImage} 
-                  />
+                  <View style={styles.iconWrapper}>
+                                        <Image style={styles.notiff} source={NotificationImage} />
+                                        {notificationCount > 0 && (
+                                            <View style={styles.badge}>
+                                                <Text style={styles.badgeText}>{notificationCount}</Text>
+                                            </View>
+                                        )}
+                                    </View>
                 </TouchableOpacity>
               ),
             })}
@@ -142,9 +149,10 @@ function AboutScreen({navigation}) {
 function HomeScreen({navigation}) {
   // add state
   const [isWasher, setIsWasher] = useState(true);
-  
   const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
   const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
+  const [machines, setMachines] = useState([]);
+  
 
   const handleWasherPress = () => {
     setWasherPressed(true);    // Set Washer as pressed
@@ -158,95 +166,134 @@ function HomeScreen({navigation}) {
     setIsWasher(false);
   };
 
+  useEffect(() => {
+    // Fetch machine availability
+    fetch('https://calvinkleanapp-gkard6gxf8g8d6em.eastus2-01.azurewebsites.net/getmachine1')
+      .then((response) => response.json())
+      .then((data) => setMachines(data))
+      .catch((error) => console.error('Error fetching machine data:', error));
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-
-        { /* Adding Washer and Dryer Icon */}
-        <View style={styles.buttonRow}>
-          {/* Washer Button */}
-          <TouchableOpacity style={[styles.smallButton, isDryerPressed && styles.grayLayer]} onPress={handleWasherPress}>
-            <Image 
-                source={WasherImage} // Ensure correct path
-                style={styles.icon} 
-              />
-          </TouchableOpacity>
-          {/* Dryer Button */}
-          <TouchableOpacity style={[styles.smallButton, isWasherPressed && styles.grayLayer]} onPress={handleDryerPress}>
-            <Image 
-                source={DryerImage} // Ensure correct path
-                style={styles.icon} 
-              />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.buttonContainer}>
+      {/* Adding Washer and Dryer Icons */}
+      <View style={styles.buttonRow}>
+        {/* Washer Button */}
+        <TouchableOpacity
+          style={[styles.smallButton, isDryerPressed && styles.grayLayer]}
+          onPress={handleWasherPress}
+        >
+          <Image source={WasherImage} style={styles.icon} />
+        </TouchableOpacity>
+        {/* Dryer Button */}
+        <TouchableOpacity
+          style={[styles.smallButton, isWasherPressed && styles.grayLayer]}
+          onPress={handleDryerPress}
+        >
+          <Image source={DryerImage} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
 
         
-        {isWasher ? (
+         {/* Washer Machines */}
+         {isWasher ? (
           <>
-            {/* Washer Buttons */}
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
-                  <Text style={styles.buttonAvailable}>Available</Text>
-                </View>
-                <Image source={LaundryIcon} style={styles.icon} />
+          <TouchableOpacity
+            style={styles.buttonBox}
+            onPress={() => navigation.navigate('Washer')}
+          >
+            <View style={styles.buttonContent}>
+              <View style={styles.textContainer}>
+                <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+                <Text
+                  style={
+                    machines && machines.availability
+                      ? styles.buttonUnavailable
+                      : styles.buttonAvailable
+                  }
+                >
+                  {machines && machines.availability ? 'Unavailable' : 'Available'}
+                </Text>
               </View>
-            </TouchableOpacity>
+              <Image source={LaundryIcon} style={styles.icon} />
+            </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
+          <TouchableOpacity
+              style={styles.buttonBox}
+              onPress={() => navigation.navigate('Washer')}
+            >
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
-                  <Text style={styles.buttonAvailable}>Available</Text>
-                </View>
-                <Image source={LaundryIcon} style={styles.icon} />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
                   <Text style={styles.buttonUnavailable}>Unavailable</Text>
                 </View>
                 <Image source={LaundryIcon} style={styles.icon} />
               </View>
             </TouchableOpacity>
+
+          <TouchableOpacity
+          style={styles.buttonBox}
+          onPress={() => navigation.navigate('Washer')}
+          >
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
+              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+            </View>
+            <Image source={LaundryIcon} style={styles.icon} />
+          </View>
+          </TouchableOpacity>
           </>
         ) : (
-          /* No buttons for dryers yet */
           <>
-            {/* Dryer Buttons */}
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Dryer Machine 1</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
-                </View>
-                <Image source={DryerMainImage} style={styles.icon} />
+          <TouchableOpacity
+            style={styles.buttonBox}
+            onPress={() => navigation.navigate('Dryer')}
+          >
+            <View style={styles.buttonContent}>
+              <View style={styles.textContainer}>
+                <Text style={styles.buttonHeading}>Dryer Machine 1</Text>
+                <Text
+                  style={
+                    machines && machines.availability
+                      ? styles.buttonUnavailable
+                      : styles.buttonAvailable
+                  }
+                >
+                  {machines && machines.availability ? 'Unavailable' : 'Available'}
+                </Text>
               </View>
-            </TouchableOpacity>
+              <Image source={DryerMainImage} style={styles.icon} />
+            </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Dryer Machine 2</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
-                </View>
-                <Image source={DryerMainImage} style={styles.icon} />
-              </View>
-            </TouchableOpacity>
+          <TouchableOpacity
+          style={styles.buttonBox}
+          onPress={() => navigation.navigate('Dryer')}
+          >
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Dryer Machine 2</Text>
+              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+            </View>
+            <Image source={DryerMainImage} style={styles.icon} />
+          </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Dryer Machine 3</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
-                </View>
-                <Image source={DryerMainImage} style={styles.icon} />
-              </View>
-            </TouchableOpacity>
+          <TouchableOpacity
+          style={styles.buttonBox}
+          onPress={() => navigation.navigate('Dryer')}
+          >
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Dryer Machine 3</Text>
+              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+            </View>
+            <Image source={DryerMainImage} style={styles.icon} />
+          </View>
+          </TouchableOpacity>
           </>
         )}
       </View>
@@ -303,11 +350,12 @@ function WasherScreen({navigation}){
   };
 
 function DryerScreen(){
+  const { setShowDryingButton} = useNotification();
   return (
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set!')}>
+        <TouchableOpacity style={styles.notificationBox}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Dryer Machine 1 </Text>
@@ -326,7 +374,7 @@ function DryerScreen(){
 
        {/* Time Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('14 minutes and 53 seconds left!')}>
+        <TouchableOpacity style={styles.notificationBox} onPress={() => {setShowDryingButton(true); alert('Your notification has been set');}}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Get Notified</Text>
@@ -341,6 +389,7 @@ function DryerScreen(){
 
 function NotificationScreen() {
   const { showLaundryButton, setShowLaundryButton } = useNotification();
+  const { showDryingButton, setShowDryingButton } = useNotification();
 
   return (
     <View style={styles.notificationContainer}>
@@ -362,6 +411,20 @@ function NotificationScreen() {
               </TouchableOpacity>
             </View>
             <Image source={LaundryIcon} style={styles.icon} />
+          </View>
+  
+        </View>
+      )}
+      {showDryingButton && (
+        <View style={styles.buttonBox}>
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Drying Machine 1</Text>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => setShowDryingButton(false)}>
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+            <Image source={DryerMainImage} style={styles.icon} />
           </View>
   
         </View>
@@ -639,6 +702,31 @@ notifIcon: {
   width: 60,
   height: 60,
   marginRight: 20,
+},
+
+notiff: {
+  width: 30,
+  height: 30,
+},
+iconWrapper: {
+  position: 'relative', // Enables positioning of the badge relative to the icon
+  marginRight: 15, // Space between icon and screen edge
+},
+badge: {
+  position: 'absolute',
+  top: -5, // Adjust to position the badge on the top-right
+  right: -5,
+  backgroundColor: 'red',
+  borderRadius: 10,
+  width: 20,
+  height: 20,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+badgeText: {
+  color: 'white',
+  fontSize: 12,
+  fontWeight: 'bold',
 },
 
 /* Delete Button */
