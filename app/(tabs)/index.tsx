@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView} from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,7 +19,6 @@ const NotificationImage = require('../../assets/images/NotificationIcon.png');
 const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-
 //const LogoImage = require('../../assets/images/Calvin Klean.png');
 // const LaundryIcon = require('../../assets/images/LaundryIcon.png');
 // const DryerImage = require('../../assets/images/DryerMachine.png');
@@ -28,7 +27,6 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 // const NotificationImage = require('../../assets/images/NotificationIcon.png');
 // const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 // const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
-
 
 type NotificationContextType = {
   showLaundryButton: boolean;
@@ -153,6 +151,7 @@ function HomeScreen({navigation}) {
   const [isWasher, setIsWasher] = useState(true);
   const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
   const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
+  const [machines, setMachines] = useState([]);
   
 
   const handleWasherPress = () => {
@@ -167,95 +166,134 @@ function HomeScreen({navigation}) {
     setIsWasher(false);
   };
 
+  useEffect(() => {
+    // Fetch machine availability
+    fetch('https://calvinkleanapp-gkard6gxf8g8d6em.eastus2-01.azurewebsites.net/getmachine1')
+      .then((response) => response.json())
+      .then((data) => setMachines(data))
+      .catch((error) => console.error('Error fetching machine data:', error));
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-
-        { /* Adding Washer and Dryer Icon */}
-        <View style={styles.buttonRow}>
-          {/* Washer Button */}
-          <TouchableOpacity style={[styles.smallButton, isDryerPressed && styles.grayLayer]} onPress={handleWasherPress}>
-            <Image 
-                source={WasherImage} // Ensure correct path
-                style={styles.icon} 
-              />
-          </TouchableOpacity>
-          {/* Dryer Button */}
-          <TouchableOpacity style={[styles.smallButton, isWasherPressed && styles.grayLayer]} onPress={handleDryerPress}>
-            <Image 
-                source={DryerImage} // Ensure correct path
-                style={styles.icon} 
-              />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.buttonContainer}>
+      {/* Adding Washer and Dryer Icons */}
+      <View style={styles.buttonRow}>
+        {/* Washer Button */}
+        <TouchableOpacity
+          style={[styles.smallButton, isDryerPressed && styles.grayLayer]}
+          onPress={handleWasherPress}
+        >
+          <Image source={WasherImage} style={styles.icon} />
+        </TouchableOpacity>
+        {/* Dryer Button */}
+        <TouchableOpacity
+          style={[styles.smallButton, isWasherPressed && styles.grayLayer]}
+          onPress={handleDryerPress}
+        >
+          <Image source={DryerImage} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
 
         
-        {isWasher ? (
+         {/* Washer Machines */}
+         {isWasher ? (
           <>
-            {/* Washer Buttons */}
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
-                  <Text style={styles.buttonAvailable}>Available</Text>
-                </View>
-                <Image source={LaundryIcon} style={styles.icon} />
+          <TouchableOpacity
+            style={styles.buttonBox}
+            onPress={() => navigation.navigate('Washer')}
+          >
+            <View style={styles.buttonContent}>
+              <View style={styles.textContainer}>
+                <Text style={styles.buttonHeading}>Laundry Machine 1</Text>
+                <Text
+                  style={
+                    machines && machines.availability
+                      ? styles.buttonUnavailable
+                      : styles.buttonAvailable
+                  }
+                >
+                  {machines && machines.availability ? 'Unavailable' : 'Available'}
+                </Text>
               </View>
-            </TouchableOpacity>
+              <Image source={LaundryIcon} style={styles.icon} />
+            </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
+          <TouchableOpacity
+              style={styles.buttonBox}
+              onPress={() => navigation.navigate('Washer')}
+            >
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
-                  <Text style={styles.buttonAvailable}>Available</Text>
-                </View>
-                <Image source={LaundryIcon} style={styles.icon} />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Washer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
                   <Text style={styles.buttonUnavailable}>Unavailable</Text>
                 </View>
                 <Image source={LaundryIcon} style={styles.icon} />
               </View>
             </TouchableOpacity>
+
+          <TouchableOpacity
+          style={styles.buttonBox}
+          onPress={() => navigation.navigate('Washer')}
+          >
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
+              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+            </View>
+            <Image source={LaundryIcon} style={styles.icon} />
+          </View>
+          </TouchableOpacity>
           </>
         ) : (
-          /* No buttons for dryers yet */
           <>
-            {/* Dryer Buttons */}
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Dryer Machine 1</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
-                </View>
-                <Image source={DryerMainImage} style={styles.icon} />
+          <TouchableOpacity
+            style={styles.buttonBox}
+            onPress={() => navigation.navigate('Dryer')}
+          >
+            <View style={styles.buttonContent}>
+              <View style={styles.textContainer}>
+                <Text style={styles.buttonHeading}>Dryer Machine 1</Text>
+                <Text
+                  style={
+                    machines && machines.availability
+                      ? styles.buttonUnavailable
+                      : styles.buttonAvailable
+                  }
+                >
+                  {machines && machines.availability ? 'Unavailable' : 'Available'}
+                </Text>
               </View>
-            </TouchableOpacity>
+              <Image source={DryerMainImage} style={styles.icon} />
+            </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Dryer Machine 2</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
-                </View>
-                <Image source={DryerMainImage} style={styles.icon} />
-              </View>
-            </TouchableOpacity>
+          <TouchableOpacity
+          style={styles.buttonBox}
+          onPress={() => navigation.navigate('Dryer')}
+          >
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Dryer Machine 2</Text>
+              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+            </View>
+            <Image source={DryerMainImage} style={styles.icon} />
+          </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBox} onPress={() => navigation.navigate('Dryer')}>
-              <View style={styles.buttonContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonHeading}>Dryer Machine 3</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
-                </View>
-                <Image source={DryerMainImage} style={styles.icon} />
-              </View>
-            </TouchableOpacity>
+          <TouchableOpacity
+          style={styles.buttonBox}
+          onPress={() => navigation.navigate('Dryer')}
+          >
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Dryer Machine 3</Text>
+              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+            </View>
+            <Image source={DryerMainImage} style={styles.icon} />
+          </View>
+          </TouchableOpacity>
           </>
         )}
       </View>
