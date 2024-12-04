@@ -33,15 +33,18 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 type NotificationContextType = {
   showLaundryButton: boolean;
   setShowLaundryButton: (value: boolean) => void;
+  showDryingButton: boolean;
+  setShowDryingButton: (value: boolean) => void;
 };
 
 const Stack = createNativeStackNavigator();
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [showLaundryButton, setShowLaundryButton] = useState(false);
+  const [showDryingButton, setShowDryingButton] = useState(false);
 
   return (
-    <NotificationContext.Provider value={{ showLaundryButton, setShowLaundryButton }}>
+    <NotificationContext.Provider value={{ showLaundryButton, setShowLaundryButton, showDryingButton, setShowDryingButton }}>
       {children}
     </NotificationContext.Provider>
   );
@@ -56,6 +59,8 @@ export const useNotification = () => {
 };
 
 export default function App() {
+  const [notificationCount, setNotificationCount] = useState(2);
+  
   return (
     <NotificationProvider>
       {/* Make sure there's only ONE NavigationContainer at the root */}
@@ -72,10 +77,14 @@ export default function App() {
               title: 'Home',
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                  <Image 
-                    style={styles.notif} 
-                    source={NotificationImage} 
-                  />
+                  <View style={styles.iconWrapper}>
+                                        <Image style={styles.notiff} source={NotificationImage} />
+                                        {notificationCount > 0 && (
+                                            <View style={styles.badge}>
+                                                <Text style={styles.badgeText}>{notificationCount}</Text>
+                                            </View>
+                                        )}
+                                    </View>
                 </TouchableOpacity>
               ),
             })}
@@ -108,9 +117,9 @@ MainScreen.propTypes = {
 function HomeScreen({navigation}) {
   // add state
   const [isWasher, setIsWasher] = useState(true);
-  
   const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
   const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
+  
 
   const handleWasherPress = () => {
     setWasherPressed(true);    // Set Washer as pressed
@@ -269,11 +278,12 @@ function WasherScreen({navigation}){
   };
 
 function DryerScreen(){
+  const { setShowDryingButton} = useNotification();
   return (
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('Your notification has been set!')}>
+        <TouchableOpacity style={styles.notificationBox}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Dryer Machine 1 </Text>
@@ -292,7 +302,7 @@ function DryerScreen(){
 
        {/* Time Button */}
       <View style={styles.washerWrapper}>
-        <TouchableOpacity style={styles.notificationBox} onPress={() => alert('14 minutes and 53 seconds left!')}>
+        <TouchableOpacity style={styles.notificationBox} onPress={() => {setShowDryingButton(true); alert('Your notification has been set');}}>
           <View style={styles.NotificationContent}>
             <View style={styles.NotificationContainer}>
               <Text style={styles.NotificationHeading}>Get Notified</Text>
@@ -307,6 +317,7 @@ function DryerScreen(){
 
 function NotificationScreen() {
   const { showLaundryButton, setShowLaundryButton } = useNotification();
+  const { showDryingButton, setShowDryingButton } = useNotification();
 
   return (
     <View style={styles.notificationContainer}>
@@ -328,6 +339,20 @@ function NotificationScreen() {
               </TouchableOpacity>
             </View>
             <Image source={LaundryIcon} style={styles.icon} />
+          </View>
+  
+        </View>
+      )}
+      {showDryingButton && (
+        <View style={styles.buttonBox}>
+          <View style={styles.buttonContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.buttonHeading}>Drying Machine 1</Text>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => setShowDryingButton(false)}>
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+            <Image source={DryerMainImage} style={styles.icon} />
           </View>
   
         </View>
@@ -573,6 +598,31 @@ notifIcon: {
   width: 60,
   height: 60,
   marginRight: 20,
+},
+
+notiff: {
+  width: 30,
+  height: 30,
+},
+iconWrapper: {
+  position: 'relative', // Enables positioning of the badge relative to the icon
+  marginRight: 15, // Space between icon and screen edge
+},
+badge: {
+  position: 'absolute',
+  top: -5, // Adjust to position the badge on the top-right
+  right: -5,
+  backgroundColor: 'red',
+  borderRadius: 10,
+  width: 20,
+  height: 20,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+badgeText: {
+  color: 'white',
+  fontSize: 12,
+  fontWeight: 'bold',
 },
 
 /* Delete Button */
