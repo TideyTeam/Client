@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { StyleSheet, Image, View, Text ,TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView} from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PropTypes from 'prop-types';
@@ -70,6 +70,7 @@ export default function App() {
           <Stack.Screen name="Washer" component={WasherScreen} />
           <Stack.Screen name="Dryer" component={DryerScreen} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
+          <Stack.Screen name="About" component={AboutScreen} />
           <Stack.Screen
             name="Home"
             component={HomeScreen}
@@ -104,7 +105,8 @@ function MainScreen({ navigation }) {
         <Image source={LogoImage} style={styles.image} />
       </View>
       <View style={styles.footerContainer}>
-        <Button label="Get Started" onPress={() => navigation.navigate('Home')} />
+        <Button label="Get Started" onPress={() => navigation.navigate('Home')} style={styles.button}/>
+        <Button label="About us" onPress={() => navigation.navigate('About')} style={styles.button}/>
       </View>
     </View>
   );
@@ -114,6 +116,38 @@ MainScreen.propTypes = {
   navigation: PropTypes.object.isRequired, // React Navigation's navigation object
 };
 
+function AboutScreen({navigation}) {
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.heading}>
+          This app allows you to:
+        </Text>
+        <Text style={styles.point}>
+          1. View Machine Availability
+        </Text>
+        <Text style={styles.text}>
+          Navigate to the Home Page to view a list of machines and 
+          their availability.
+        </Text>
+        <Text style={styles.point}>
+          2. Access Machine Details
+        </Text>
+        <Text style={styles.text}>
+          Click on a machine to access its details on the Machine 
+          Details Page.
+        </Text>
+        <Text style={styles.point}>
+          3. Use the "Get Notified" Feature
+        </Text>
+        <Text style={styles.text}>
+          Use the "Get Notified" button to receive updates about the 
+          machine.
+        </Text>
+      </ScrollView>
+    </View>
+  );
+}
 function HomeScreen({navigation}) {
   // add state
   const [isWasher, setIsWasher] = useState(true);
@@ -385,15 +419,47 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flex: 1 / 3,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'column', // Stack the buttons vertically
+    alignItems: 'center', // Center align buttons horizontally
+    marginHorizontal: 10, // Optional: Adjust side margins
+  },
+  button: {
+    marginBottom: 20, 
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 30, // Adds space above the heading
+    marginBottom: 30,
+    marginHorizontal: 25, 
+    color: '#0065AE', // Dark text
+  },
+  point: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0065AE', // Dark text
+    textAlign: 'left',
+    marginBottom: 10,
+    lineHeight: 22,
+    marginHorizontal: 25, // Adds margins to the left and right
+  },
+  text: {
+    fontSize: 16,
+    color: '#000000', // Dark text
+    textAlign: 'left',
+    marginBottom: 10,
+    lineHeight: 22,
+    marginHorizontal: 25, // Adds margins to the left and right
+  },
+  content: {
+    alignItems: 'flex-start',
   },
 
   /* Home Screen */
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 100, 
   },
 
   buttonBox: {
