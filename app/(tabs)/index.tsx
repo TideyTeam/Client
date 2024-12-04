@@ -188,8 +188,9 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Dryer Machine 1</Text>
+                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
                 </View>
-                <Image source={DryerImage} style={styles.icon} />
+                <Image source={DryerMainImage} style={styles.icon} />
               </View>
             </TouchableOpacity>
 
@@ -197,8 +198,9 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Dryer Machine 2</Text>
+                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
                 </View>
-                <Image source={DryerImage} style={styles.icon} />
+                <Image source={DryerMainImage} style={styles.icon} />
               </View>
             </TouchableOpacity>
 
@@ -206,8 +208,9 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Dryer Machine 3</Text>
+                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
                 </View>
-                <Image source={DryerImage} style={styles.icon} />
+                <Image source={DryerMainImage} style={styles.icon} />
               </View>
             </TouchableOpacity>
           </>
