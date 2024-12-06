@@ -104,7 +104,7 @@ function MainScreen({ navigation }) {
       </View>
       <View style={styles.footerContainer}>
         <Button label="Get Started" onPress={() => navigation.navigate('Home')} style={styles.button}/>
-        <Button label="About us" onPress={() => navigation.navigate('About')} style={styles.button}/>
+        <Button label="Help" onPress={() => navigation.navigate('About')} style={styles.button}/>
       </View>
     </View>
   );
