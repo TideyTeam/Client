@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView} from 'react-native';
+import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView, Alert} from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PropTypes from 'prop-types';
@@ -188,6 +188,8 @@ function HomeScreen({navigation}) {
   const [isWasherPressed, setWasherPressed] = useState(false); // State to track if Washer button is pressed
   const [isDryerPressed, setDryerPressed] = useState(false); // State to track if Washer button is pressed
   const [machines, setMachines] = useState([]);
+  const [previousAvailability, setPreviousAvailability] = useState(null); // Track previous availability
+  const {showLaundryButton, setShowLaundryButton}= useNotification();
   
 
   const handleWasherPress = () => {
@@ -203,12 +205,31 @@ function HomeScreen({navigation}) {
   };
 
   useEffect(() => {
-    // Fetch machine availability
-    fetch('https://calvinkleanapp-gkard6gxf8g8d6em.eastus2-01.azurewebsites.net/getmachine1')
-      .then((response) => response.json())
-      .then((data) => setMachines(data))
-      .catch((error) => console.error('Error fetching machine data:', error));
+    const fetchMachineData = () => {
+      fetch('https://calvinkleanapp-gkard6gxf8g8d6em.eastus2-01.azurewebsites.net/allmachines/1')
+        .then((response) => response.json())
+        .then((data) => {
+          setMachines(data);
+        })
+        .catch((error) => console.error('Error fetching machine data:', error));
+    };
+
+    fetchMachineData();
+    const interval = setInterval(fetchMachineData, 5000); // Fetch every 5 seconds
+    return () => clearInterval(interval); // Clean up on unmount
   }, []);
+
+  useEffect(() => {
+    if (showLaundryButton && machines) {
+      // Check if Laundry Machine 1 became available
+      const currentAvailability = machines.availability; // Assume "availability" corresponds to Machine 1
+      if (previousAvailability !== null && !previousAvailability && currentAvailability) {
+        Alert.alert('Notification', 'Your laundry is done');
+        setShowLaundryButton(false); // Reset the notification button if desired
+      }
+      setPreviousAvailability(currentAvailability); // Update previous state
+    }
+  }, [showLaundryButton, machines]);
 
   return (
     <View style={styles.container}>
@@ -245,11 +266,11 @@ function HomeScreen({navigation}) {
                 <Text
                   style={
                     machines && machines.availability
-                      ? styles.buttonUnavailable
-                      : styles.buttonAvailable
+                      ? styles.buttonAvailable
+                      : styles.buttonUnavailable
                   }
                 >
-                  {machines && machines.availability ? 'Unavailable' : 'Available'}
+                  {machines && machines.availability ? 'Available' : 'Unavailable'}
                 </Text>
               </View>
               <Image source={LaundryIcon} style={styles.icon} />
@@ -263,7 +284,7 @@ function HomeScreen({navigation}) {
               <View style={styles.buttonContent}>
                 <View style={styles.textContainer}>
                   <Text style={styles.buttonHeading}>Laundry Machine 2</Text>
-                  <Text style={styles.buttonUnavailable}>Unavailable</Text>
+                  <Text style={styles.buttonAvailable}>Available</Text>
                 </View>
                 <Image source={LaundryIcon} style={styles.icon} />
               </View>
@@ -276,7 +297,7 @@ function HomeScreen({navigation}) {
           <View style={styles.buttonContent}>
             <View style={styles.textContainer}>
               <Text style={styles.buttonHeading}>Laundry Machine 3</Text>
-              <Text style={styles.buttonUnavailable}>Unavailable</Text>
+              <Text style={styles.buttonAvailable}>Available</Text>
             </View>
             <Image source={LaundryIcon} style={styles.icon} />
           </View>
