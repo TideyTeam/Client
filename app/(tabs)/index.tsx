@@ -3,6 +3,7 @@ import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView} from 'reac
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PropTypes from 'prop-types';
+import { useLayoutEffect } from 'react';
 
 // import { useNavigation } from '@react-navigation/native';
 
@@ -68,23 +69,33 @@ export default function App() {
           <Stack.Screen name="Washer" component={WasherScreen} />
           <Stack.Screen name="Dryer" component={DryerScreen} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
-          <Stack.Screen name="About" component={AboutScreen} />
+          <Stack.Screen name="Help" component={HelpScreen} />
+          <Stack.Screen name="Help " component={NotificationHelpScreen} />
           <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={({ navigation }) => ({
               title: 'Home',
               headerRight: () => (
+
+                <View style={styles.headerRightContainer}>
+                {/* Help Button */}
+                <TouchableOpacity onPress={() => navigation.navigate('Help')}>
+                  <Text style={styles.helpButton}>Help</Text>
+                </TouchableOpacity>
+
+
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
                   <View style={styles.iconWrapper}>
-                                        <Image style={styles.notiff} source={NotificationImage} />
-                                        {notificationCount > 0 && (
-                                            <View style={styles.badge}>
-                                                <Text style={styles.badgeText}>{notificationCount}</Text>
-                                            </View>
-                                        )}
-                                    </View>
+                      <Image style={styles.notiff} source={NotificationImage} />
+                      {notificationCount > 0 && (
+                          <View style={styles.badge}>
+                              <Text style={styles.badgeText}>{notificationCount}</Text>
+                          </View>
+                      )}
+                  </View>
                 </TouchableOpacity>
+              </View>
               ),
             })}
           />
@@ -104,17 +115,17 @@ function MainScreen({ navigation }) {
       </View>
       <View style={styles.footerContainer}>
         <Button label="Get Started" onPress={() => navigation.navigate('Home')} style={styles.button}/>
-        <Button label="About us" onPress={() => navigation.navigate('About')} style={styles.button}/>
       </View>
     </View>
   );
 }
+
 // PropTypes for MainScreen
 MainScreen.propTypes = {
   navigation: PropTypes.object.isRequired, // React Navigation's navigation object
 };
 
-function AboutScreen({navigation}) {
+function HelpScreen({navigation}) {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -122,30 +133,55 @@ function AboutScreen({navigation}) {
           This app allows you to:
         </Text>
         <Text style={styles.point}>
-          1. View Machine Availability
+          • View Machine Availability
         </Text>
         <Text style={styles.text}>
           Navigate to the Home Page to view a list of machines and 
           their availability.
         </Text>
         <Text style={styles.point}>
-          2. Access Machine Details
+          • Access Machine Details
         </Text>
         <Text style={styles.text}>
-          Click on a machine to access its details on the Machine 
-          Details Page.
+          Click on a machine to access its details.
         </Text>
         <Text style={styles.point}>
-          3. Use the "Get Notified" Feature
+          • Use the "Get Notified" Feature
         </Text>
         <Text style={styles.text}>
-          Use the "Get Notified" button to receive updates about the 
+          Click on the "Get Notified" button to receive updates about the 
           machine.
         </Text>
       </ScrollView>
     </View>
   );
 }
+
+
+function NotificationHelpScreen({navigation}) {
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.heading}>
+          The notification page allows you to:
+        </Text>
+        <Text style={styles.point}>
+          • Track Machine Availability
+        </Text>
+        <Text style={styles.text}>
+          View the selected machine for tracking purposes.
+        </Text>
+        <Text style={styles.point}>
+          • Use the Delete Button
+        </Text>
+        <Text style={styles.text}>
+          Use the Delete button to stop tracking the machine.
+        </Text>
+      </ScrollView>
+    </View>
+  );
+}
+
 function HomeScreen({navigation}) {
   // add state
   const [isWasher, setIsWasher] = useState(true);
@@ -308,7 +344,17 @@ function HomeScreen({navigation}) {
 
 function WasherScreen({navigation}){
   const { setShowLaundryButton} = useNotification();
-
+  
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Help')}>
+          <Text style={styles.helpButton}>Help</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+  
   return (
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
@@ -340,7 +386,6 @@ function WasherScreen({navigation}){
           </View>
         </TouchableOpacity>
       </View>
-      
     </View>
   );
 }
@@ -349,8 +394,19 @@ function WasherScreen({navigation}){
     navigation: PropTypes.object.isRequired,
   };
 
-function DryerScreen(){
+function DryerScreen({navigation}){
   const { setShowDryingButton} = useNotification();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Help')}>
+          <Text style={styles.helpButton}>Help</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <View style={styles.washerContainer}>
       {/* Get Notified Button */}
@@ -387,9 +443,19 @@ function DryerScreen(){
   );
 }
 
-function NotificationScreen() {
+function NotificationScreen({navigation}) {
   const { showLaundryButton, setShowLaundryButton } = useNotification();
   const { showDryingButton, setShowDryingButton } = useNotification();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Help ')}>
+          <Text style={styles.helpButton}>Help</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.notificationContainer}>
@@ -453,16 +519,17 @@ const styles = StyleSheet.create({
     width: 440,
     height: 700, 
     borderRadius: 18,
-    marginTop: 100,
+    marginTop: 250,
   },
   footerContainer: {
     flex: 1 / 3,
     flexDirection: 'column', // Stack the buttons vertically
     alignItems: 'center', // Center align buttons horizontally
+    marginTop: 180,
     marginHorizontal: 10, // Optional: Adjust side margins
   },
   button: {
-    marginBottom: 20, 
+    marginBottom: 10, 
   },
   heading: {
     fontSize: 24,
@@ -575,6 +642,19 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 20,
+  },
+
+  //Help
+
+  headerRightContainer: {
+    flexDirection: 'row', // Align items horizontally
+    alignItems: 'center', // Center items vertically
+    marginRight: 15, // Adjust spacing from the right edge
+  },
+  helpButton: {
+    marginRight: 10, // Space between Help button and notification icon
+    color: 'white', // Customize button text color
+    fontSize: 16,
   },
 
   // Washer Dryer Icon Within HomeScreen
