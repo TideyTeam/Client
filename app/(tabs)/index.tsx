@@ -1,3 +1,15 @@
+/**
+ * @file Washer and Dryer Notifications App
+ * @description This file contains components for managing washer and dryer notifications, 
+ * including setting notifications, navigation, and rendering the UI for the laundry app.
+ * The application supports:
+ * - Washer screen for managing washer notifications.
+ * - Dryer screen for managing dryer notifications.
+ * - A notification screen displaying all active notifications.
+ * - Navigation between screens with a "Help" option.
+ * @module LaundryApp
+ */
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { StyleSheet, Image, View, Text ,TouchableOpacity, ScrollView, Alert} from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
@@ -29,6 +41,10 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 // const NotificationGoldImage = require('../../assets/images/NotificationGoldIcon.png');
 // const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
+
+/**
+ * Notification context type defining state and setters for laundry and drying buttons.
+ */
 type NotificationContextType = {
   showLaundryButton: boolean;
   setShowLaundryButton: (value: boolean) => void;
@@ -38,6 +54,14 @@ type NotificationContextType = {
 
 const Stack = createNativeStackNavigator();
 
+/**
+ * NotificationProvider component that wraps its children with the NotificationContext provider.
+ * Provides state management for laundry and drying button visibility.
+ * 
+ * @param {Object} props - The component's props.
+ * @param {ReactNode} props.children - Child components to be wrapped with the provider.
+ * @returns {JSX.Element} The provider with its children.
+ */
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [showLaundryButton, setShowLaundryButton] = useState(false);
   const [showDryingButton, setShowDryingButton] = useState(false);
@@ -49,6 +73,12 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+/**
+ * Custom hook to access the NotificationContext.
+ * 
+ * @throws Will throw an error if used outside of a NotificationProvider.
+ * @returns {NotificationContextType} The context values.
+ */
 export const useNotification = () => {
   const context = useContext(NotificationContext);
   if (!context) {
@@ -57,6 +87,11 @@ export const useNotification = () => {
   return context;
 };
 
+/**
+ * Root application component that sets up navigation and provides notification context.
+ * 
+ * @returns {JSX.Element} The main application component.
+ */
 export default function App() {
   const [notificationCount, setNotificationCount] = useState(2);
   
@@ -105,8 +140,13 @@ export default function App() {
   );
 }
 
-
-
+/**
+ * Main screen of the application with a "Get Started" button to navigate to the Home screen.
+ * 
+ * @param {Object} props - The component's props.
+ * @param {Object} props.navigation - React Navigation's navigation object for handling navigation between screens.
+ * @returns {JSX.Element} The main screen layout.
+ */
 function MainScreen({ navigation }) {
   return (
     <View style={styles.container}>
@@ -125,6 +165,13 @@ MainScreen.propTypes = {
   navigation: PropTypes.object.isRequired, // React Navigation's navigation object
 };
 
+/**
+ * Help screen providing users with guidance on app features and functionality.
+ * 
+ * @param {Object} props - The component's props.
+ * @param {Object} props.navigation - React Navigation's navigation object for handling navigation between screens.
+ * @returns {JSX.Element} The help screen layout.
+ */
 function HelpScreen({navigation}) {
   return (
     <View style={styles.container}>
@@ -157,7 +204,13 @@ function HelpScreen({navigation}) {
   );
 }
 
-
+/**
+ * Notification help screen describing features related to machine tracking and notification management.
+ * 
+ * @param {Object} props - The component's props.
+ * @param {Object} props.navigation - React Navigation's navigation object for handling navigation between screens.
+ * @returns {JSX.Element} The notification help screen layout.
+ */
 function NotificationHelpScreen({navigation}) {
   return (
     <View style={styles.container}>
@@ -182,6 +235,13 @@ function NotificationHelpScreen({navigation}) {
   );
 }
 
+/**
+ * HomeScreen component for managing washer and dryer machine availability.
+ *
+ * @param {Object} props - The component's props.
+ * @param {Object} props.navigation - React Navigation object for screen navigation.
+ * @returns {JSX.Element} The layout for the HomeScreen.
+ */
 function HomeScreen({navigation}) {
   // add state
   const [isWasher, setIsWasher] = useState(true);
@@ -363,6 +423,13 @@ function HomeScreen({navigation}) {
     navigation: PropTypes.object.isRequired,
   };
 
+/**
+ * WasherScreen component for displaying a washer's status, image, and notification options.
+ * 
+ * @param {Object} props - Component props.
+ * @param {Object} props.navigation - Navigation object used to navigate between screens.
+ * @returns {JSX.Element} The WasherScreen component.
+ */
 function WasherScreen({navigation}){
   const { setShowLaundryButton} = useNotification();
   
@@ -415,6 +482,14 @@ function WasherScreen({navigation}){
     navigation: PropTypes.object.isRequired,
   };
 
+/**
+ * DryerScreen component for managing the UI of a dryer machine, 
+ * including notification settings, navigation, and an image display.
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.navigation - Navigation object provided by React Navigation.
+ * @returns {JSX.Element} The DryerScreen component.
+ */
 function DryerScreen({navigation}){
   const { setShowDryingButton} = useNotification();
 
@@ -464,6 +539,14 @@ function DryerScreen({navigation}){
   );
 }
 
+/**
+ * NotificationScreen component for managing the notification settings
+ * and displaying the active notifications for laundry and drying machines.
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.navigation - Navigation object provided by React Navigation.
+ * @returns {JSX.Element} The NotificationScreen component.
+ */
 function NotificationScreen({navigation}) {
   const { showLaundryButton, setShowLaundryButton } = useNotification();
   const { showDryingButton, setShowDryingButton } = useNotification();
@@ -519,7 +602,6 @@ function NotificationScreen({navigation}) {
     </View>
   );
 }
-
 
 
 /* Main Screen */
